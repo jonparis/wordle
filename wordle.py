@@ -196,6 +196,7 @@ def evaluate_solver(solver_klass, k):
     where score(i) = MAX_NUM_GUESSES+1-num_guesses_taken / MAX_NUM_GUESSES if won else 0
     """
 
+    assert k > 0
     k = min(len(WORDS), k)
     shuffled_words = sample(WORDS, k)
 

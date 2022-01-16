@@ -193,7 +193,7 @@ class CLISolver(Solver):
 def evaluate_solver(solver_klass, k):
     """
     Play the game k times. The overall score will simply be the mean score(i) for all k games,
-    where score(i) = MAX_NUM_GUESSES+1-num_guesses_taken / MAX_NUM_GUESSES if won else 0
+    where score(i) = num_guesses_taken if won else MAX_NUM_GUESSES + 1 (so lower is better).
     """
 
     assert k > 0
@@ -212,14 +212,13 @@ def evaluate_solver(solver_klass, k):
         else:
             print(f"Solver lost. The word was {game._target_word}")
 
-        score_sum += max(1.0, float(game.MAX_NUM_GUESSES + 1 -
-                         game.num_guesses_taken)/float(game.MAX_NUM_GUESSES)) if game.won else 0
+        score_sum += game.num_guesses_taken if game.won else game.MAX_NUM_GUESSES + 1
 
     return float(score_sum) / float(k)
 
 
 def main():
-    score = evaluate_solver(RandomSolver, k=2)
+    score = evaluate_solver(RandomSolver, k=len(WORDS))
     print(f"\nSOLVER SCORE = {score}\n")
 
     play_again = input("Play again (y/n)? ").strip().lower()

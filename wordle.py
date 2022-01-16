@@ -135,6 +135,8 @@ class Game:
             if not self.god_mode:
                 self.num_guesses_taken += 1
 
+            solver.on_guess_processed(guess_obj)
+
             print(guess_obj)
             if guess_obj.is_correct():
                 self.won = True

@@ -160,7 +160,7 @@ class Solver(ABC):
 
     def on_end(self):
         """
-        Upon the game ending, the solver will get a callback with won being a boolean (true if the solver won, false otherwise).
+        Upon the game ending, the solver will get a callback.
         """
 
         pass
@@ -219,7 +219,7 @@ def evaluate_solver(solver_klass, k):
 
 
 def main():
-    score = evaluate_solver(CLISolver, k=2)
+    score = evaluate_solver(RandomSolver, k=2)
     print(f"\nSOLVER SCORE = {score}\n")
 
     play_again = input("Play again (y/n)? ").strip().lower()

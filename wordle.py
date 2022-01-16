@@ -43,7 +43,7 @@ class Guess:
 
             chars[i] = f"{color}{c}{COLORS.ENDC}"
 
-        return f"{''.join(chars)}"
+        return ''.join(chars)
 
     def print(self):
         print(str(self))

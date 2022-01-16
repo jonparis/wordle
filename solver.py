@@ -73,7 +73,7 @@ class AbeSolver(Solver):
             else:
                 self.characters_that_are_not_in_target_word.add(guess.guess[i])
 
-    def _calculate_largest_coverage_word(self):
+    def make_a_guess(self):
         # 1. First, we filter words since we might know about positional characters and also
         #    if certain characters are definitely not in the word.
         filtered_words = []
@@ -120,6 +120,7 @@ class AbeSolver(Solver):
                     count_map[c] = 0.0
                 count_map[c] += 1.0
 
+        # A map of position to a map of character to frequency.
         frequency_map = {}
         for word in filtered_words:
             for c in word:
@@ -142,19 +143,6 @@ class AbeSolver(Solver):
                 max_coverage = coverage
 
         return ret
-
-    def make_a_guess(self):
-        """
-        Every time we guess, among our unguessed words, we calculate the greatest "coverage" score where coverage is
-        defined as:
-
-        1. let s be the *set* of characters in a given word w
-        2. coverage(w) = sum(frequency_map[c]) if c has not been guessed in a prior guess word, 0 otherwise for all c in w
-
-        We have to recalculate this score for every single word on every guess, so not cheap but that's not the point.
-        """
-
-        return self._calculate_largest_coverage_word()
 
 
 def evaluate_solver(solver_klass, k):

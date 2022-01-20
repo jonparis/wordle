@@ -12,6 +12,9 @@ class KNOWLEDGE:
 
 
 class WordleTools:
+    DEPTH_OF_SUGGESTION = 5*10**7 # (bigger numbers take longer)
+    SHOW_TIMER = True
+    LOOK_FOR_MATCHES_ONLY = 200 # at what match count do you prioritize picking the right match vs eliminating options
     @staticmethod
     def test_word_for_match(test_word, knowledge):
         # remove words that include letters known not to be in word
@@ -51,14 +54,15 @@ class WordleTools:
         count = 0
         start_time = time.time()
         fast_suggest = WordleTools.get_suggestion_fast(knowledge, matches, guess_options)
-        if search_scale > 100000:
+        if search_scale > WordleTools.DEPTH_OF_SUGGESTION:
             return fast_suggest
 
         for guess in guess_options:
             exclusions_by_guess[guess] = 0.0
 
         for secret in matches:
-            # count = WordleTools.status_time_estimate(count, start_time, total_matches)
+            if WordleTools.SHOW_TIMER:
+                count = WordleTools.status_time_estimate(count, start_time, total_matches)
 
             for guess in guess_options:
                 for answer in matches:
@@ -109,7 +113,7 @@ class WordleTools:
                 focus_suggested_word = word
 
         # 500 is a guess. might be worth focusing to a lower word count
-        if focus_suggested_word and total_matches > 300:
+        if focus_suggested_word and total_matches > WordleTools.LOOK_FOR_MATCHES_ONLY:
             return focus_suggested_word
         else:
             return suggested_guess

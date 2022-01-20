@@ -12,7 +12,7 @@ class KNOWLEDGE:
 
 
 class WordleTools:
-    DEPTH_OF_SUGGESTION = 5*10**7 # (bigger numbers take longer)
+    DEPTH_OF_SUGGESTION = 10**7 # (bigger numbers take longer)
     SHOW_TIMER = True
     LOOK_FOR_MATCHES_ONLY = 200 # at what match count do you prioritize picking the right match vs eliminating options
     @staticmethod
@@ -53,7 +53,7 @@ class WordleTools:
         search_scale = total_matches * total_matches * guess_ct
         count = 0
         start_time = time.time()
-        fast_suggest = WordleTools.get_suggestion_fast(knowledge, matches, guess_options)
+        fast_suggest = WordleTools.get_suggestion_fast(knowledge, guess_options)
         if search_scale > WordleTools.DEPTH_OF_SUGGESTION:
             return fast_suggest
 
@@ -80,9 +80,10 @@ class WordleTools:
         return suggested_guess
 
     @staticmethod
-    def get_suggestion_fast(knowledge, matches, guess_options):
+    def get_suggestion_fast(knowledge, guess_options):
         # get as much insight into the letters we don't know about that are in the remaining words
         # exclude words that
+        matches = WordleTools.get_possible_matches(copy.deepcopy(knowledge), guess_options)
         letter_count = {}
         focus_letter_count = {}
         in_word_letters = knowledge[KNOWLEDGE.IN_WORD]
@@ -102,6 +103,8 @@ class WordleTools:
         max_focus = 0.0
         focus_suggested_word = None
 
+        if total_matches < 5:
+            guess_options = matches
         for word in guess_options:
             coverage = sum([letter_count[c] for c in set([c for c in word])])
             focus_coverage = sum([focus_letter_count[c] for c in set([c for c in word])])
@@ -111,7 +114,6 @@ class WordleTools:
             if focus_coverage > max_focus:
                 max_focus = focus_coverage
                 focus_suggested_word = word
-
         # 500 is a guess. might be worth focusing to a lower word count
         if focus_suggested_word and total_matches > WordleTools.LOOK_FOR_MATCHES_ONLY:
             return focus_suggested_word
